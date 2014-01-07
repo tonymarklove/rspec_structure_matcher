@@ -61,12 +61,12 @@ This will pass if `video['episode_number']` is either `null` or `is_a?(Integer)`
 Similar to optional values, testing deep strucutres has been kept as simple as possible. Simply define a new expected structure:
 
     tv_show_expected_structure = {
-      title: string
+      title: String
     }
 
 And then compare the structure as normal:
 
-    expect(video['tv_show']) to have_structure(tv_show_expected_structure)
+    expect(video['tv_show']).to have_structure(tv_show_expected_structure)
 
 ## Contributing
 
