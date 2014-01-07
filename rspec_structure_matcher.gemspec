@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["tony@new-bamboo.co.uk"]
   spec.description   = %q{Rspec matchers for structured JSON responses. Compare expected keys, value types, or even match values against regular expressions.}
   spec.summary       = %q{Rspec matchers for structured JSON responses.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/jjbananas/rspec_structure_matcher"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "rspec"
+  spec.add_dependency "rspec", "~> 2.0"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
