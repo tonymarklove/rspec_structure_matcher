@@ -1,23 +1,19 @@
 RSpec::Matchers.define :have_structure do |expected|
   match do |actual|
-    missing_items(actual, expected).empty?
+    invalid_items(actual, expected).empty?
   end
 
   failure_message_for_should do |actual|
-    missing = missing_items(actual, expected)
-    "missing or invalid keys: #{missing.join(', ')}\n\n#{actual.slice(*missing)}"
+    invalid = invalid_items(actual, expected)
+    "missing or invalid keys: #{invalid.keys.join(', ')}\n\n#{invalid}"
   end
 
-  def missing_items(actual, expected)
-    missing_items = []
-
-    expected.each do |key, value|
+  def invalid_items(actual, expected)
+    expected.each_with_object({}) do |(key, value), memo|
       if !actual.has_key?(key.to_s) || !value_match(actual[key.to_s], value)
-        missing_items << key.to_s
+        memo[key] = value
       end
     end
-
-    missing_items
   end
 
   def value_match(actual_value, expected_value)
