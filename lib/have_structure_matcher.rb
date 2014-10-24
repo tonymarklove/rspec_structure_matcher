@@ -3,7 +3,7 @@ RSpec::Matchers.define :have_structure do |expected|
     invalid_items(actual, expected).empty?
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     invalid = invalid_items(actual, expected)
     "missing or invalid keys: #{invalid.keys.join(', ')}\n\n#{invalid}"
   end
