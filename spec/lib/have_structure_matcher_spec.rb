@@ -51,4 +51,19 @@ describe 'have_structure' do
       }.not_to raise_error
     end
   end
+
+  context 'when there are symbol keys' do
+    let(:structure) {
+      {
+        :foo => 'baz',
+        'bar' => 'baz'
+      }
+    }
+
+    it 'raise no error' do
+      expect {
+        expect(structure).to have_structure(expected_structure)
+      }.not_to raise_error
+    end
+  end
 end
