@@ -3,7 +3,7 @@ RSpec::Matchers.define :optionally_be do |expected|
     actual.nil? || actual.is_a?(expected)
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     "#{actual} must be 'nil' or '#{expected}'"
   end
 end
