@@ -57,15 +57,18 @@ As mentioned above, you can use `optionally` to test optional values, so that th
 
 ### Deep Structures
 
-Similar to optional values, testing deep strucutres has been kept as simple as possible. Simply define a new expected structure:
+Nesting deeper structures works automatically. Simply nest your structure:
 
-    tv_show_expected_structure = {
-      title: String
+    expected_video_response = {
+      title: 'Episode 1',
+      tv_show: {
+        title: 'Top Gear'
+      }
     }
 
 And then compare the structure as normal:
 
-    expect(video['tv_show']).to have_structure(tv_show_expected_structure)
+    expect(video).to have_structure(expected_video_response)
 
 ## Contributing
 

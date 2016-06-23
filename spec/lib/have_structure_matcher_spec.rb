@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'rspec_structure_matcher'
 
 describe 'have_structure' do
@@ -18,7 +19,23 @@ describe 'have_structure' do
     it 'raises the correct error' do
       expect {
         expect(structure).to have_structure(expected_structure)
-      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /missing or invalid keys: bar/)
+      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /-"bar" => String/)
+    end
+  end
+
+  context 'when there too many keys' do
+    let(:structure) {
+      {
+        'foo' => 'baz',
+        'bar' => 'baz',
+        'bam' => 'baz'
+      }
+    }
+
+    it 'raises the correct error' do
+      expect {
+        expect(structure).to have_structure(expected_structure)
+      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\+"bam" => "baz"/)
     end
   end
 
@@ -33,7 +50,7 @@ describe 'have_structure' do
     it 'raises the correct error' do
       expect {
         expect(structure).to have_structure(expected_structure)
-      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /missing or invalid keys: foo/)
+      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /-"foo" => String/)
     end
   end
 
@@ -60,10 +77,10 @@ describe 'have_structure' do
       }
     }
 
-    it 'raise no error' do
+    it 'fails validation' do
       expect {
         expect(structure).to have_structure(expected_structure)
-      }.not_to raise_error
+      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /-"foo" => String/)
     end
   end
 
@@ -98,10 +115,10 @@ describe 'have_structure' do
         }
       end
 
-      it 'raise no error' do
+      it 'fails validation' do
         expect {
           expect(structure).to have_structure(expected_structure)
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /missing or invalid keys: foo/)
+        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /-"foo" => 2/)
       end
     end
   end
@@ -128,10 +145,10 @@ describe 'have_structure' do
     context 'incorrect value' do
       let(:structure) { {'foo' => 100} }
 
-      it 'raise no error' do
+      it 'fails validation' do
         expect {
           expect(structure).to have_structure(expected_structure)
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /missing or invalid keys: foo/)
+        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\+"foo" => 100/)
       end
     end
   end
@@ -162,5 +179,49 @@ describe 'have_structure' do
         }.not_to raise_error
       end
     end
+  end
+
+  context "with nested structure" do
+    let(:expected_structure) do
+      {
+        'foo' => 1,
+        'bar' => {
+          'baz' => String
+        }
+      }
+    end
+
+    context "matches correctly" do
+      let(:structure) do
+        {
+          'foo' => 1,
+          'bar' => {
+            'baz' => 'hello'
+          }
+        }
+      end
+
+      it 'passes validation' do
+        expect {
+          expect(structure).to have_structure(expected_structure)
+        }.not_to raise_error
+      end
+    end
+
+    context "mis-matched nesting" do
+      let(:structure) do
+        {
+          'foo' => 1,
+          'bar' => 'a'
+        }
+      end
+
+      it 'fails validation' do
+        expect {
+          expect(structure).to have_structure(expected_structure)
+        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\+"bar" => "a"/)
+      end
+    end
+
   end
 end
