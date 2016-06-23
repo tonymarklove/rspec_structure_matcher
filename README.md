@@ -2,7 +2,7 @@
 
 A simple JSON structure matcher for RSpec.
 
-When building an API it is nice to be able to test the response structure. Doing this with the built-in RSpec matchers can get tiresome. This matcher provides a nicer way to test for expected keys, value types, and even matching values against regular expressions.
+When building an API it is nice to be able to test the response structure. Doing this with the built-in RSpec matchers can get tiresome. This matcher provides a nicer way to test for expected keys, value types, regular expressions, or custom validation procs/lambdas.
 
 ## Installation
 
@@ -23,11 +23,11 @@ Or install it yourself as:
 Define an expected response structure:
 
     expected_video_response = {
-      title: String,
-      episode_number: Object, # Optional, may be null
+      title: 'Top Gear', # Exact match
+      episode_number: optionally(Fixnum), # Optional, may be null
       tv_show: Hash,
       published_on: /\d{4}-\d{2}-\d{2}/,
-      breadcrumbs: Array,
+      breadcrumbs: ->(value) { value == 'bread/crumbs' },
       images: Hash
     }
 
@@ -42,19 +42,18 @@ Including an item in the expected structure ensures that a key with that name ex
 Native Types (String, Hash, etc.)
 : Test that the value matches the type, using `is_a?`.
 
-Object
-: Useful for testing the key exists but not requiring an particular type. Optional values (which are `null` if they are not present) can use this as well.
-
 Regular Expression
 : Tests the value for a match against the regular expression. Very useful for things like dates where your code is relying on a particular format.
 
+Callable proc/lambda
+: Callback your supplied proc with the `actual_value`. Return `true` for a match and `false` for a failure.
+
+Exact match
+: Other values will be compared directly with `==`.
+
 ### Testing Optional Values
 
-As mentioned above, you can use `Object` to test optional values, so that the test will pass even if the response contains a `null`. To add an extra level of checking you can use the `optionally_be` matcher:
-
-    expect(video['episode_number']).to optionally_be(Integer)
-
-This will pass if `video['episode_number']` is either `null` or `is_a?(Integer)`.
+As mentioned above, you can use `optionally` to test optional values, so that the test will pass even if the response contains a `null`. `optionally` is nothing more than a helpful lambda generation method, much like the proc/lambda that you can write yourself.
 
 ### Deep Structures
 

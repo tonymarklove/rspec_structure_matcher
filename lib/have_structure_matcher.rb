@@ -10,7 +10,7 @@ RSpec::Matchers.define :have_structure do |expected, opts|
 
   def invalid_items(actual, expected)
     expected.each_with_object({}) do |(key, value), memo|
-      if !has_key?(actual, key) || !value_match(get_key(actual, key), value)
+      if !has_key?(actual, key) || !have_structure_value_match?(get_key(actual, key), value)
         memo[key] = value
       end
     end
@@ -25,14 +25,6 @@ RSpec::Matchers.define :have_structure do |expected, opts|
       actual[key.to_s]
     else
       actual[key.to_sym]
-    end
-  end
-
-  def value_match(actual_value, expected_value)
-    if expected_value.is_a?(Regexp)
-      actual_value =~ expected_value
-    else
-      actual_value.is_a?(expected_value)
     end
   end
 end
