@@ -18,6 +18,12 @@ Or install it yourself as:
 
     $ gem install rspec_structure_matcher
 
+Then mixin/include the helper methods into your RSpec tests by adding them to the `RSpec.configure` block, usually found in `spec_helper.rb` or `rails_helper.rb`:
+
+    RSpec.configure do |config|
+      config.include HaveStructureMatcher::Methods
+    end
+
 ## Usage
 
 Define an expected response structure:

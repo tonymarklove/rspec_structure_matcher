@@ -55,7 +55,3 @@ module HaveStructureMatcher
     end
   end
 end
-
-RSpec.configure do |config|
-  config.include HaveStructureMatcher::Methods
-end
