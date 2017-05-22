@@ -278,4 +278,15 @@ describe 'have_structure' do
       }.not_to raise_error
     end
   end
+
+  context "matching two arrays" do
+    let(:expected_structure) { [Integer] }
+    let(:structure) { [10, 20, 30] }
+
+    it 'passes validation' do
+      expect {
+        expect(structure).to have_structure(expected_structure)
+      }.not_to raise_error
+    end
+  end
 end

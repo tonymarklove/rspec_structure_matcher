@@ -1,6 +1,6 @@
 require 'pp'
 
-RSpec::Matchers.define :have_structure do |expected, opts|
+RSpec::Matchers.define :have_structure do |expected|
   match do |actual|
     HaveStructureMatcher.match?(actual, expected)
   end
