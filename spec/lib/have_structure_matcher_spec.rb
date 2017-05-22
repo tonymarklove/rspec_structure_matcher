@@ -193,6 +193,17 @@ describe 'have_structure' do
         }.not_to raise_error
       end
     end
+
+    context 'regular expression' do
+      let(:expected_structure) { {'foo' => optionally(/\w+/)} }
+      let(:structure) { {'foo' => 'hello'} }
+
+      it 'raises no error' do
+        expect {
+          expect(structure).to have_structure(expected_structure)
+        }.not_to raise_error
+      end
+    end
   end
 
   context "with nested structure" do

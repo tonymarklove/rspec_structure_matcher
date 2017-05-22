@@ -10,8 +10,20 @@ module HaveStructureMatcher
   end
 
   def self.build_diff(actual, expected)
-    return expected unless actual.is_a?(Hash)
+    if actual.is_a?(Array) && expected.is_a?(Array)
+      build_array_diff(actual, expected)
+    elsif actual.is_a?(Hash) && expected.is_a?(Hash)
+      build_hash_diff(actual, expected)
+    elsif actual.is_a?(Hash)
+      expected
+    elsif value_match?(actual, expected)
+      actual
+    else
+      expected
+    end
+  end
 
+  def self.build_hash_diff(actual, expected)
     keys = actual.keys | expected.keys
 
     keys.each_with_object({}) do |key, memo|
@@ -22,7 +34,7 @@ module HaveStructureMatcher
         if expected_value.is_a?(Hash)
           memo[key] = build_diff(actual_value, expected_value)
         elsif expected_value.is_a?(Array)
-          memo[key] = build_array_diff(expected_value, actual_value)
+          memo[key] = build_array_diff(actual_value, expected_value)
         elsif value_match?(actual_value, expected_value)
           memo[key] = actual_value
         else
@@ -35,7 +47,7 @@ module HaveStructureMatcher
     end
   end
 
-  def self.build_array_diff(expected_value, actual_value)
+  def self.build_array_diff(actual_value, expected_value)
     if expected_value.length == 1 && actual_value.is_a?(Array)
       actual_value.map { |a| build_diff(a, expected_value[0]) }
     else
