@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'rspec_structure_matcher'
 
 describe 'have_structure' do
   let(:expected_structure) {
@@ -19,7 +18,7 @@ describe 'have_structure' do
     it 'raises the correct error' do
       expect {
         expect(structure).to have_structure(expected_structure)
-      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /-"bar" => String/)
+      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, Regexp.new('-{"foo"=>"baz", "bar"=>String}'))
     end
   end
 
@@ -35,7 +34,10 @@ describe 'have_structure' do
     it 'raises the correct error' do
       expect {
         expect(structure).to have_structure(expected_structure)
-      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\+"bam" => "baz"/)
+      }.to raise_error(
+        RSpec::Expectations::ExpectationNotMetError,
+        Regexp.new(Regexp.escape('+{"foo"=>"baz", "bar"=>"baz", "bam"=>"baz"}'))
+      )
     end
   end
 
@@ -50,7 +52,10 @@ describe 'have_structure' do
     it 'raises the correct error' do
       expect {
         expect(structure).to have_structure(expected_structure)
-      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /-"foo" => String/)
+      }.to raise_error(
+        RSpec::Expectations::ExpectationNotMetError,
+        Regexp.new(Regexp.escape('+{"foo"=>1, "bar"=>"baz"}'))
+      )
     end
   end
 
@@ -80,7 +85,10 @@ describe 'have_structure' do
     it 'fails validation' do
       expect {
         expect(structure).to have_structure(expected_structure)
-      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /-"foo" => String/)
+      }.to raise_error(
+        RSpec::Expectations::ExpectationNotMetError,
+        Regexp.new(Regexp.escape('+{:foo=>"baz", "bar"=>"baz"}'))
+      )
     end
   end
 
@@ -118,7 +126,10 @@ describe 'have_structure' do
       it 'fails validation' do
         expect {
           expect(structure).to have_structure(expected_structure)
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /-"foo" => 2/)
+        }.to raise_error(
+          RSpec::Expectations::ExpectationNotMetError,
+          Regexp.new(Regexp.escape('+{"foo"=>1, "bar"=>"baz"}'))
+        )
       end
     end
   end
@@ -148,7 +159,10 @@ describe 'have_structure' do
       it 'fails validation' do
         expect {
           expect(structure).to have_structure(expected_structure)
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\+"foo" => 100/)
+        }.to raise_error(
+          RSpec::Expectations::ExpectationNotMetError,
+          Regexp.new(Regexp.quote('+{"foo"=>100}'))
+        )
       end
     end
   end
@@ -219,9 +233,11 @@ describe 'have_structure' do
       it 'fails validation' do
         expect {
           expect(structure).to have_structure(expected_structure)
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /\+"bar" => "a"/)
+        }.to raise_error(
+          RSpec::Expectations::ExpectationNotMetError,
+          Regexp.new(Regexp.quote('+{"foo"=>1, "bar"=>"a"}'))
+        )
       end
     end
-
   end
 end
