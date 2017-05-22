@@ -240,4 +240,31 @@ describe 'have_structure' do
       end
     end
   end
+
+  context "matching against an array of objects" do
+    let(:expected_structure) do
+      {
+        'items' => [
+          {
+            'name' => String
+          }
+        ]
+      }
+    end
+
+    let(:structure) do
+      {
+        'items' => [
+          { 'name' => 'Bob' },
+          { 'name' => 'Jane' }
+        ]
+      }
+    end
+
+    it 'passes validation' do
+      expect {
+        expect(structure).to have_structure(expected_structure)
+      }.not_to raise_error
+    end
+  end
 end

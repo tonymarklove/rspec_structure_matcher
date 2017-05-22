@@ -57,6 +57,27 @@ Callable proc/lambda
 Exact match
 : Other values will be compared directly with `==`.
 
+### Testing arrays
+
+You often want to match each item in an array of objects against the same structure. To do so, simply define your structure with a single item in the array. This item will be matched against all items in the array you are testing.
+
+    expected_structure = {
+      items: [
+        {
+          name: String
+        }
+      ]
+    }
+
+    actual_object = {
+      items: [
+        { name: 'Bob' },
+        { name: 'Jane' }
+      ]
+    }
+
+    expect(actual_object).to have_structure(expected_structure) # true
+
 ### Testing Optional Values
 
 As mentioned above, you can use `optionally` to test optional values, so that the test will pass even if the response contains a `null`. `optionally` is nothing more than a helpful lambda generation method, much like the proc/lambda that you can write yourself.

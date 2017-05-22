@@ -22,7 +22,7 @@ module HaveStructureMatcher
         if expected_value.is_a?(Hash)
           memo[key] = build_diff(actual_value, expected_value)
         elsif expected_value.is_a?(Array)
-          memo[key] = expected_value.zip(actual_value).map { |(e,a)| build_diff(a, e) }
+          memo[key] = build_array_diff(expected_value, actual_value)
         elsif value_match?(actual_value, expected_value)
           memo[key] = actual_value
         else
@@ -32,6 +32,14 @@ module HaveStructureMatcher
         expected_value = expected[key]
         memo[key] = print_expected_value(expected_value)
       end
+    end
+  end
+
+  def self.build_array_diff(expected_value, actual_value)
+    if expected_value.length == 1 && actual_value.is_a?(Array)
+      actual_value.map { |a| build_diff(a, expected_value[0]) }
+    else
+      expected_value.zip(actual_value).map { |(e,a)| build_diff(a, e) }
     end
   end
 
